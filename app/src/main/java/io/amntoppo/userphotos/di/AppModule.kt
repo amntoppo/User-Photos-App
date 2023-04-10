@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.amntoppo.userphotos.BuildConfig
+import io.amntoppo.userphotos.data.api.UserApi
 import io.amntoppo.userphotos.data.model.User
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -24,7 +25,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserApi(retrofit: Retrofit): User =
-        retrofit.create(User::class.java)
+    fun provideUserApi(retrofit: Retrofit): UserApi =
+        retrofit.create(UserApi::class.java)
 
 }
