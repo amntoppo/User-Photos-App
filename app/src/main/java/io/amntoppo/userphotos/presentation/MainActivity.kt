@@ -1,4 +1,4 @@
-package io.amntoppo.userphotos.presentation.ui
+package io.amntoppo.userphotos.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -24,7 +24,7 @@ inline fun <ResultType, RequestType>NetworkBoundResource(
         query().map { Resource.Success(it)}
     }
     emitAll(flow)
-}.flowOn(Dispatchers.IO)
+}
     .catch {
         emit(Resource.Error(it, null))
     }

@@ -1,7 +1,6 @@
-package io.amntoppo.userphotos.presentation.ui.fragments
+package io.amntoppo.userphotos.presentation.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,20 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import io.amntoppo.userphotos.R
-import io.amntoppo.userphotos.presentation.ui.viewmodels.MainViewModel
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
+import io.amntoppo.userphotos.presentation.viewmodels.MainViewModel
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.amntoppo.userphotos.databinding.FragmentMainBinding
 import io.amntoppo.userphotos.domain.model.User
-import io.amntoppo.userphotos.presentation.ui.adapter.UserAdapter
+import io.amntoppo.userphotos.presentation.adapter.UserAdapter
 import io.amntoppo.userphotos.utils.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainFragment: Fragment(R.layout.fragment_main) {
@@ -36,12 +28,6 @@ class MainFragment: Fragment(R.layout.fragment_main) {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
-//        GlobalScope.launch(Dispatchers.IO) {
-//            val ab = async { }
-//            val bc = async {}
-//
-//            val bcaa = ab.await() + bc.await()
-//        }
         userAdapter = UserAdapter(::onItemClicked)
         binding.apply {
             usersRecyclerView.apply {
@@ -57,23 +43,21 @@ class MainFragment: Fragment(R.layout.fragment_main) {
 
         viewModel.loadUser()
             .observe(viewLifecycleOwner) { result ->
-//                result.data?.let { viewModel.selectedUser(it[0]) }
-                userAdapter.submitList(result.data)
-                binding.apply {
-                    progressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
-                    textViewError.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
-                    textViewError.text = result.error?.localizedMessage
+                when(result) {
+                    is Resource.Loading -> {
+                        binding.progressBar.isVisible = true
+                    }
+                    is Resource.Error -> {
+                        binding.textViewError.isVisible = true
+                        binding.textViewError.text = result.error?.localizedMessage
+                    }
+                    is Resource.Success -> {
+                        binding.progressBar.isVisible = false
+                        binding.textViewError.isVisible = false
+                        userAdapter.submitList(result.data)
+                    }
+                }
             }
-            }
-
-//        viewModel.user.observe(viewLifecycleOwner) { result ->
-//            userAdapter.submitList(result.data)
-//            binding.apply {
-//                progressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
-//                textViewError.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
-//                textViewError.text = result.error?.localizedMessage
-//            }
-        //}
     }
 
     fun onItemClicked(user: User) {
