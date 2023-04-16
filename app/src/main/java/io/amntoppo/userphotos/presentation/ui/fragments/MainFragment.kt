@@ -7,13 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import io.amntoppo.userphotos.R
 import io.amntoppo.userphotos.presentation.ui.viewmodels.MainViewModel
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.amntoppo.userphotos.databinding.FragmentMainBinding
+import io.amntoppo.userphotos.domain.model.User
 import io.amntoppo.userphotos.presentation.ui.adapter.UserAdapter
 import io.amntoppo.userphotos.utils.Resource
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +28,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainFragment: Fragment(R.layout.fragment_main) {
     private lateinit var binding: FragmentMainBinding
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by activityViewModels()
     private lateinit var userAdapter: UserAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +42,7 @@ class MainFragment: Fragment(R.layout.fragment_main) {
 //
 //            val bcaa = ab.await() + bc.await()
 //        }
-        userAdapter = UserAdapter()
+        userAdapter = UserAdapter(::onItemClicked)
         binding.apply {
             usersRecyclerView.apply {
                 adapter = userAdapter
@@ -50,19 +54,30 @@ class MainFragment: Fragment(R.layout.fragment_main) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        viewModel.loadUser()
-//            .observe(viewLifecycleOwner) {
-//                Log.e("MainFragment", it.toString())
-//                userAdapter.submitList(it)
-//            }
 
-        viewModel.user.observe(viewLifecycleOwner) { result ->
-            userAdapter.submitList(result.data)
-            binding.apply {
-                progressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
-                textViewError.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
-                textViewError.text = result.error?.localizedMessage
+        viewModel.loadUser()
+            .observe(viewLifecycleOwner) { result ->
+//                result.data?.let { viewModel.selectedUser(it[0]) }
+                userAdapter.submitList(result.data)
+                binding.apply {
+                    progressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
+                    textViewError.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
+                    textViewError.text = result.error?.localizedMessage
             }
-        }
+            }
+
+//        viewModel.user.observe(viewLifecycleOwner) { result ->
+//            userAdapter.submitList(result.data)
+//            binding.apply {
+//                progressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
+//                textViewError.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
+//                textViewError.text = result.error?.localizedMessage
+//            }
+        //}
+    }
+
+    fun onItemClicked(user: User) {
+        findNavController().navigate(R.id.detailsFragment)
+        viewModel.selectedUser(user)
     }
 }

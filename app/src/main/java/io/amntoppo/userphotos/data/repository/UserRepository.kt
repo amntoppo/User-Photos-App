@@ -26,8 +26,7 @@ class UserRepository @Inject constructor(
         },
         saveFetchRequest = { users ->
             userDB.withTransaction {
-//                userDao.deleteAllUsers
-
+                userDao.deleteAllUsers()
                 userDao.insertUsers(users)
             }
         },

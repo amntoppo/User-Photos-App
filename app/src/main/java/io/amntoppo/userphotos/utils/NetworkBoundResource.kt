@@ -1,12 +1,13 @@
 package io.amntoppo.userphotos.utils
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 
-inline fun <Result, Request>NetworkBoundResource(
-    crossinline query: () -> Flow<Result>,
-    crossinline fetch: suspend () -> Request,
-    crossinline saveFetchRequest: suspend(Request) -> Unit,
-    crossinline shouldFetch: (Result) -> Boolean = {true}
+inline fun <ResultType, RequestType>NetworkBoundResource(
+    crossinline query: () -> Flow<ResultType>,
+    crossinline fetch: suspend () -> RequestType,
+    crossinline saveFetchRequest: suspend(RequestType) -> Unit,
+    crossinline shouldFetch: (ResultType) -> Boolean = {true}
 ) = flow {
     val data = query().first()
     val flow = if (shouldFetch(data)) {
@@ -23,4 +24,7 @@ inline fun <Result, Request>NetworkBoundResource(
         query().map { Resource.Success(it)}
     }
     emitAll(flow)
-}
+}.flowOn(Dispatchers.IO)
+    .catch {
+        emit(Resource.Error(it, null))
+    }

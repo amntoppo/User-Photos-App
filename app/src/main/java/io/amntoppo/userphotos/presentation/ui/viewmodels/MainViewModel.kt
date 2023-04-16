@@ -5,6 +5,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.amntoppo.userphotos.data.remote.UserApi
 import io.amntoppo.userphotos.data.repository.UserRepository
 import io.amntoppo.userphotos.domain.model.User
+import io.amntoppo.userphotos.utils.Resource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -13,17 +16,23 @@ class MainViewModel @Inject constructor(
     private val api: UserApi,
     private val userRepository: UserRepository
     ): ViewModel() {
-    private val userMutableData = MutableLiveData<List<User>>()
-    val userData: LiveData<List<User>> = userMutableData
-    val user = userRepository.getUsers().asLiveData()
+    private val userMutableData = MutableLiveData<Resource<out List<User>>>()
+    private val userData: LiveData<Resource<out List<User>>> = userMutableData
 
-        fun loadUser(): LiveData<List<User>> {
+    private val mutableSelectedItem = MutableLiveData<User>()
+    val selectedItem: LiveData<User> get() = mutableSelectedItem
+//    val user = userRepository.getUsers().asLiveData()
+
+        fun loadUser(): LiveData<Resource<out List<User>>> {
             viewModelScope.launch {
-//                val userList = api.getUsers()
-                val userList = userRepository.getUsers().asLiveData()
-                userMutableData.value = userList.value?.data!!
+                userRepository.getUsers().collect {
+                    userMutableData.value = it
+                }
             }
-
-            return userMutableData
+            return userData
         }
+
+    fun selectedUser(user: User) {
+        mutableSelectedItem.value = user
+    }
 }
