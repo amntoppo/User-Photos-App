@@ -1,4 +1,4 @@
-package io.amntoppo.userphotos.data.model
+package io.amntoppo.userphotos.domain.model
 
 data class Address(
     val city: String,

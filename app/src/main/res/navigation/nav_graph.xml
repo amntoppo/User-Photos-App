@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="io.amntoppo.userphotos.ui.fragments.MainFragment"
+        android:name="io.amntoppo.userphotos.presentation.ui.fragments.MainFragment"
         android:label="MainFragment" >
         <action
             android:id="@+id/action_mainFragment_to_detailsFragment"
@@ -14,6 +14,6 @@
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="io.amntoppo.userphotos.ui.fragments.DetailsFragment"
+        android:name="io.amntoppo.userphotos.presentation.ui.fragments.DetailsFragment"
         android:label="DetailsFragment" />
 </navigation>

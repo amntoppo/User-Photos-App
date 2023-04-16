@@ -1,4 +1,4 @@
-package io.amntoppo.userphotos.ui
+package io.amntoppo.userphotos.presentation.ui
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

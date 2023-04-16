@@ -1,4 +1,4 @@
-package io.amntoppo.userphotos.ui
+package io.amntoppo.userphotos.presentation.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,6 +15,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        findNavController(R.id.navHostFragment).navigate(R.id.mainFragment)
+//        findNavController(R.id.navHostFragment).navigate(R.id.mainFragment)
     }
 }

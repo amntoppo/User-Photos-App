@@ -1,4 +1,4 @@
-package io.amntoppo.userphotos.data.model
+package io.amntoppo.userphotos.domain.model
 
 data class Photo(
     val albumId: Int,

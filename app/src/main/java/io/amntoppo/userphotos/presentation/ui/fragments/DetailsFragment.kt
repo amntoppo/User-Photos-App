@@ -1,4 +1,4 @@
-package io.amntoppo.userphotos.ui.fragments
+package io.amntoppo.userphotos.presentation.ui.fragments
 
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,12 +1,14 @@
 package io.amntoppo.userphotos.di
 
+import android.app.Application
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.amntoppo.userphotos.BuildConfig
-import io.amntoppo.userphotos.data.api.UserApi
-import io.amntoppo.userphotos.data.model.User
+import io.amntoppo.userphotos.data.local.UserDatabase
+import io.amntoppo.userphotos.data.remote.UserApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -27,5 +29,11 @@ object AppModule {
     @Singleton
     fun provideUserApi(retrofit: Retrofit): UserApi =
         retrofit.create(UserApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDatabase(app: Application): UserDatabase =
+        Room.databaseBuilder(app, UserDatabase::class.java, "user_database")
+            .build()
 
 }

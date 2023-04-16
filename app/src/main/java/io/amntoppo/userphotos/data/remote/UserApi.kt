@@ -1,7 +1,7 @@
-package io.amntoppo.userphotos.data.api
+package io.amntoppo.userphotos.data.remote
 
-import io.amntoppo.userphotos.data.model.Photo
-import io.amntoppo.userphotos.data.model.User
+import io.amntoppo.userphotos.domain.model.Photo
+import io.amntoppo.userphotos.domain.model.User
 import retrofit2.http.GET
 
 interface UserApi {
