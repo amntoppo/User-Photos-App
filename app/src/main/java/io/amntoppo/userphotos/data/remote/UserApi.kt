@@ -9,6 +9,4 @@ interface UserApi {
     @GET("users")
     suspend fun getUsers(): List<User>
 
-//    @GET("photos")
-//    suspend fun getPhotos(id: Int): List<Photo>
 }
