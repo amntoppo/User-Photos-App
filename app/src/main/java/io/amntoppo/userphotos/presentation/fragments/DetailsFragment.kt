@@ -1,6 +1,7 @@
 package io.amntoppo.userphotos.presentation.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,9 +41,13 @@ class DetailsFragment: Fragment(R.layout.fragment_details) {
                         is Resource.Error -> Glide.with(binding.root)
                             .load(R.drawable.user_placeholder)
                             .into(binding.profileImage)
-                        is Resource.Loading -> Glide.with(binding.root)
-                            .load(R.drawable.user_placeholder)
-                            .into(binding.profileImage)
+                        is Resource.Loading -> {
+//                            if(photo.data.isEmpty())
+                            Glide.with(binding.root)
+                                .load(photo.data?.url ?: R.drawable.user_placeholder)
+
+                                .into(binding.profileImage)
+                        }
                     }
                 }
                 binding.apply {
